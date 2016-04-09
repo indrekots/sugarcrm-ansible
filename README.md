@@ -43,8 +43,17 @@ If Ansible finished successfully, then point your browser to the domain name you
 For deployments to work you should host your Sugar source code in a Git repository. Then generate a deploy key which allows you to access the repository.
 Look at `inventory/development/group_vars/deploy_key.yml` for example and replace it with your key.
 
+Configuration management should be kept in source control. You don't want to expose any secrets. Therefore you should encrypt your key.
+
+```
+ansible-vault encrypt inventory/development/group_vars/deploy_key.yml
+```
+
+When running a playbook, add the `--ask-vault-pass` flag for Ansible to prompt you for your vault password.
+
+
 ##Run Ansible deploy playbook
-Running `ansible-playbook -i inventory/development/hosts deploy.yml -k -K` will start a deployment to your local environment.
+Running `ansible-playbook -i inventory/development/hosts deploy.yml -k -K --ask-vault-pass` will start a deployment to your local environment.
 
 ##Create new inventory entry
 Creating a new inventory entry for a production environment is easy. Create a new folder `inventory/prod` and copy the contents of `inventory/development` into the newly created directory.

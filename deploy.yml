@@ -1,0 +1,11 @@
+---
+- name: "Deploy latest commit from version control"
+  hosts: sugar
+  sudo: yes
+
+  roles:
+   - common
+   - deploy-setup
+   - sugarcrm-setup
+   - sugarcrm-deploy
+   - sugarcrm-config

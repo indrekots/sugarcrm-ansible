@@ -1,0 +1,37 @@
+---
+#name of your environment, e.g. dev for development or prod for production
+sugar_env: dev
+
+#Domain name which you can use to access your instance
+domain_name: "{{ sugar_env }}.mydomain.local"
+site_url: http://{{ domain_name }}
+
+#MySql settings
+mysql_root_username: root
+mysql_root_password: root
+mysql_user_home: /root
+
+sugar_db_name: sugarcrm
+
+#SugarCRM admin credentials
+sugar_admin_user: admin
+sugar_admin_password: admin
+
+#Path where sugar in installed
+sugar_document_root: /srv/sugar
+
+#Enter sugar license key here
+sugar_license_key: 1234567890abcdef
+
+#Admin contact, is used to configure apache web server
+server_admin_email: admin-email@mydomain.com
+
+web_user: www-data
+web_group: www-data
+
+#Path to sugarcrm source code on your local machine
+local_site_path: ../sugarcrm
+
+#These should be set to true for development environments, for produduction, make sure they're set to false
+developerMode: true
+stack_trace_errors: true

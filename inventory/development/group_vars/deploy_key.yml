@@ -1,0 +1,5 @@
+---
+deploy_key: |
+  -----BEGIN RSA PRIVATE KEY-----
+  key contents here
+  -----END RSA PRIVATE KEY-----

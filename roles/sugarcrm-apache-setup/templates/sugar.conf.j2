@@ -1,0 +1,11 @@
+<VirtualHost *:80>
+  ServerAdmin {{ server_admin_email }}
+  DocumentRoot {{ sugar_document_root }}
+  ServerName {{ domain_name }}
+  <Directory {{ sugar_document_root }}/>
+    Options FollowSymLinks
+    AllowOverride All
+  </Directory>
+  ErrorLog /var/log/apache2/{{ domain_name }}-error_log
+  CustomLog /var/log/apache2/{{ domain_name }}-access_log common
+</VirtualHost>

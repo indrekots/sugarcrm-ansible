@@ -1,0 +1,4 @@
+---
+sugar_tar_name: SugarEnt-Full-7.5.2.1.tar.gz
+sugar_tar_location: installer/{{ sugar_tar_name }}
+

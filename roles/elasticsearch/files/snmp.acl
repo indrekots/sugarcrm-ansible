@@ -1,0 +1,13 @@
+acl = {
+                                {
+                                        communities = public, private
+                                        access = read-only
+                                        managers = localhost
+                                }
+                        }
+trap = {
+          {
+            trap-community = public
+            hosts = localhost
+          }
+       }

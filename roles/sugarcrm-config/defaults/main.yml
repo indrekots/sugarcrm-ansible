@@ -1,0 +1,8 @@
+---
+directories:
+ - cache
+ - custom
+ - data
+ - modules
+ - include
+ - upload

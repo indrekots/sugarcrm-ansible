@@ -1,0 +1,7 @@
+---
+apache_version: 2.2.22-1ubuntu1.10
+apache_packages:
+  - apache2={{ apache_version }}
+  - apache2-mpm-prefork={{ apache_version }}
+  - apache2.2-common={{ apache_version }}
+  - apache2.2-bin={{ apache_version }}

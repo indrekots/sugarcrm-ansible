@@ -1,0 +1,5 @@
+#When you host your source code in a git repository, enter its url here
+repository: insert repo url here
+
+java_home: /usr/lib/jvm/java-8-oracle
+php_timezone: "Europe/London"

@@ -1,0 +1,9 @@
+---
+- name: Apply config override
+  template: src=config_override.php.j2 dest={{ sugar_document_root }}/config_override.php owner={{ web_user }} group={{ web_group }} mode=0644
+
+- name: Create cronjob for SugarCRM scheduler
+  cron: name="SugarCRM scheduler" user={{ web_user }} job="cd {{ sugar_document_root }}; php -f cron.php > /dev/null 2>&1"
+
+- name: Copy SugarCRM repair and rebuild command
+  copy: src=repair.php dest=/usr/local/bin/repair owner=root mode=0755

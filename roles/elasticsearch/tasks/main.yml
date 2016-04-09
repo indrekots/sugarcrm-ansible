@@ -1,0 +1,41 @@
+---
+- name: Download and install the Public Signing Key
+  apt_key: url={{ elasticsearch_gpg_key_url }}
+
+- name: Create repository definition file
+  file: path=/etc/apt/sources.list.d/elasticsearch-{{ elasticsearch_version }}.list state=touch
+
+- name: Add repository definition
+  lineinfile:
+    dest: /etc/apt/sources.list.d/elasticsearch-{{ elasticsearch_version }}.list
+    line: "{{ elasticsearch_repository_definition }}"
+
+- name: Install elasticsearch package
+  apt:
+    update_cache: yes
+    name: elasticsearch={{ elasticsearch_version }}.{{ elasticsearch_revision_number }}
+    state: present
+
+- name: Configure elasticsearch startup parameters
+  replace:
+    dest: /etc/default/elasticsearch
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: '#ES_JAVA_OPTS=.*$', replace: 'ES_JAVA_OPTS="-Des.max-open-files=true -Dcom.sun.management.snmp.acl.file=/etc/elasticsearch/snmp.acl -Dcom.sun.management.snmp.port=11151"' }
+    - { regexp: '#MAX_OPEN_FILES=.*$', replace: 'MAX_OPEN_FILES=65535' }
+
+- name: Modify elasticsearch.yml
+  replace:
+    dest: "{{ elasticsearch_yml_location }}"
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: '#cluster.name:.*$', replace: 'cluster.name: sugarcrm' }
+    - { regexp: '#bootstrap.mlockall:.*$', replace: 'bootstrap.mlockall: true' }
+
+- name: Copy snmp.acl
+  copy: src=snmp.acl dest=/etc/elasticsearch/snmp.acl owner=elasticsearch group=elasticsearch mode=600
+
+- name: Start Elasticsearch on boot
+  service: name=elasticsearch enabled=yes state=started

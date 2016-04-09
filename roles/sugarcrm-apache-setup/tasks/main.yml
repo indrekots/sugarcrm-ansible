@@ -1,0 +1,22 @@
+---
+- name: Install SugarCRM configuration
+  template: src=sugar.conf.j2 dest=/etc/apache2/sites-available/sugar.conf owner=root group=root mode=644
+
+- name: Create document root for virtualhost
+  file: path={{ sugar_document_root }} state=directory mode=0755 owner={{ web_user }} group={{ web_group }}
+
+- name: Enable SugarCRM configuration
+  file:
+    src=/etc/apache2/sites-available/sugar.conf
+    dest=/etc/apache2/sites-enabled/sugar.conf
+    owner=root
+    group=root
+    state=link
+
+- name: test apache config
+  command: apachectl configtest
+
+- name: restart apache
+  service: name=apache2 state=restarted
+
+

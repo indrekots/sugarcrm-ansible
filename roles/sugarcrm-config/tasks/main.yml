@@ -1,0 +1,31 @@
+---
+- name: check if database folder exists
+  stat: path={{ sugar_document_root }}/database
+  register: st
+
+- name: Import fields meta data
+  mysql_db: state=import name={{ sugar_db_name }} target={{ sugar_document_root }}/database/fields_meta_data.sql
+  when: st.stat.exists == true
+
+- name: Repair and rebuild Sugar modules
+  shell: cd {{ sugar_document_root }}; repair
+
+- name: Ensure all files belong to web user
+  command: chown {{ web_user }}:{{ web_group }} -R {{ sugar_document_root }}/
+
+- name: Ensure that correct base permissions are set
+  command: "find {{ sugar_document_root }} -type {{ item.type }} -exec chmod {{ item.mode }} {} +"
+  with_items:
+    - { type: f, mode: 644 }
+    - { type: d, mode: 755 }
+
+- name: Add special directory permissions
+  command: "find {{ sugar_document_root }}/{{ item }} -type d -exec chmod 775 {} +"
+  with_items: directories
+
+- name: Add special file permissions
+  command: "find {{ sugar_document_root }}/{{ item }} -type f -exec chmod 664 {} +"
+  with_items: directories
+
+- name: Change permissions for config.php
+  command: chmod 664 {{ sugar_document_root }}/config.php

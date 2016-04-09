@@ -1,0 +1,52 @@
+---
+- name: Copy dotdeb.org repository definition
+  copy: src=dotdeb.org.list dest=/etc/apt/sources.list.d/dotdeb.org.list owner=root mode=0644
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install php packages
+  apt:
+    name: "{{ item }}"
+    state: installed
+    force: yes
+  with_items: php_dependencies
+
+- name: Check if JSMin is installed
+  stat: path={{ php_jsmin_extension_location }}
+  register: st
+
+- name: Install JSMin PHP extension
+  shell: pecl install jsmin
+  when: st.stat.exists == false
+
+- name: Enable JSMin PHP extension
+  lineinfile: dest=/etc/php5/apache2/php.ini line="extension=jsmin.so"
+
+- name: Modify php.ini
+  replace:
+    dest: /etc/php5/apache2/php.ini
+    regexp: "{{ item.regexp }}"
+    replace: "{{ item.replace }}"
+  with_items:
+    - { regexp: 'fastcgi.logging = 0', replace: 'fastcgi.logging = 0' }
+    - { regexp: ';mbstring.func_overload = 0', replace: 'mbstring.func_overload = 0' }
+    - { regexp: 'post_max_size =.*$', replace: 'post_max_size = 50M' }
+    - { regexp: 'session.cookie_lifetime =.*$', replace: 'session.cookie_lifetime =' }
+    - { regexp: 'session.gc_maxlifetime =.*$', replace: 'session.gc_maxlifetime =' }
+    - { regexp: 'upload_max_filesize =.*$', replace: 'upload_max_filesize = 50M' }
+    - { regexp: 'memory_limit =.*$', replace: 'memory_limit = 512M' }
+
+- name: Set PHP timezone for apache, cli and fpm
+  replace:
+    dest: "{{ item.path }}"
+    regexp: ';date.timezone ='
+    replace: 'date.timezone = "{{ php_timezone }}"'
+  with_items:
+    - { path: '/etc/php5/apache2/php.ini' }
+    - { path: '/etc/php5/cli/php.ini' }
+    - { path: '/etc/php5/fpm/php.ini' }
+
+- name: Enable IMAP libaries
+  shell: php5enmod imap
+  notify: restart apache

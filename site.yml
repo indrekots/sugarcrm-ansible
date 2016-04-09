@@ -1,0 +1,18 @@
+---
+- name: "SugarCRM development server"
+  hosts: sugar
+  sudo: yes
+  remote_user: vagrant
+
+  roles:
+    - { role: common, tags: [common] }
+    - { role: apache-httpd, tags: [apache-httpd] }
+    - { role: php5, tags: [php5] }
+    - { role: mysql, tags: [mysql] }
+    - { role: java, tags: [java] }
+    - { role: elasticsearch, tags: [elasticsearach] }
+    - { role: sugarcrm-apache-setup, tags: [sugarcrm-apache-setup] }
+    - { role: sugarcrm-setup, tags: [sugarcrm-setup] }
+    - { role: sugarcrm-install, tags: [sugarcrm-install] }
+    - { role: sugarcrm-config, tags: [sugarcrm-config] }
+    - { role: sugarcrm-deploy-tools, tags: [sugarcrm-deploy-tools] }

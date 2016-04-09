@@ -1,0 +1,1 @@
+sugar ansible_ssh_host=10.0.1.10 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant

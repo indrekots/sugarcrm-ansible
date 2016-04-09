@@ -1,0 +1,36 @@
+---
+- name: Install MySql server
+  apt:
+    name: "{{ item }}"
+    state: installed
+    force: yes
+  with_items:
+    - mysql-common={{ mysql_version }}
+    - mysql-server={{ mysql_version }}
+
+- name: Update MySQL root password for localhost root account.
+  shell: >
+    mysql -u root -NBe
+    'SET PASSWORD FOR "{{ mysql_root_username }}"@"localhost" = PASSWORD("{{ mysql_root_password }}");'
+
+# Has to be after the root password assignment, for idempotency.
+- name: Copy .my.cnf file with root password credentials.
+  template:
+    src: "user-my.cnf.j2"
+    dest: "{{ mysql_user_home }}/.my.cnf"
+    owner: root
+    group: root
+    mode: 0600
+
+- name: Enable access to MySql from host machine
+  shell: >
+    mysql -u root -e
+    "grant all privileges on *.* to '{{ mysql_root_username }}'@'%' identified by '{{ mysql_root_password }}' with grant option; flush privileges;"
+  when: local_site_path is defined
+
+- name: Change mysqld bind address
+  replace:
+    dest: /etc/mysql/my.cnf
+    regexp: "^bind-address.*$"
+    replace: "#bind-address = 127.0.0.1"
+  notify: restart mysql

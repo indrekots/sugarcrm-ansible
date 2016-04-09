@@ -1,0 +1,8 @@
+---
+- name: Check if .git directory exists
+  stat: path={{ sugar_document_root }}/.git
+  register: st
+
+- name: Copy git pre-commit hook
+  template: src=pre-commit.sh dest={{ sugar_document_root }}/.git/hooks/pre-commit mode=0755
+  when: st.stat.exists == true

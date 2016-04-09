@@ -1,0 +1,23 @@
+---
+- name: Copy SugarCRM silent installer configuration and installer script
+  template: src={{ item }} dest={{ sugar_document_root }}/{{ item }} owner=root mode=0755
+  with_items:
+    - config_si.php
+    - runSilentInstall.php
+
+- name: Check if installer needs to be run
+  command: grep -q "'installer_locked' => true" {{ sugar_document_root }}/config.php
+  register: installer_check
+  always_run: true
+  ignore_errors: true
+  changed_when: false
+
+- name: Run Sugar installer
+  shell: cd {{ sugar_document_root }}; php runSilentInstall.php
+  when: installer_check.rc != 0
+
+- name: Remove install scripts
+  file: path={{ sugar_document_root }}/{{ item }} state=absent
+  with_items:
+    - config_si.php
+    - runSilentInstall.php

@@ -1,0 +1,7 @@
+---
+- name: Check out the latest commit from the given branch (defaults to master)
+  git: repo={{ repository }}
+       dest={{ sugar_document_root }}
+       version={{ deploy_branch }}
+       accept_hostkey=yes
+       force=yes

@@ -1,0 +1,18 @@
+---
+- name: Copy Precise repository definition
+  copy: src=precise.list dest=/etc/apt/sources.list.d/precise.list
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install apache2 http server
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items: apache_packages
+
+- name: Enabled mod_rewrite
+  apache2_module: name=rewrite state=present
+
+- name: Disable default configuration
+  file: dest=/etc/apache2/sites-enabled/000-default state=absent

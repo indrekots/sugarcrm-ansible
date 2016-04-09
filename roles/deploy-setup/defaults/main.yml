@@ -1,0 +1,3 @@
+---
+working_dir_backup: sugarcrm-working-dir
+database_dump: sugarcrm_db_dump.sql

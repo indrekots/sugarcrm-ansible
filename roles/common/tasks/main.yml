@@ -1,0 +1,11 @@
+---
+- name: Update apt
+  apt: update_cache=yes
+  ignore_errors: yes
+
+- name: Install required packages
+  apt: name={{ item }} state=present
+  with_items:
+    - python-mysqldb
+    - git
+    - software-properties-common

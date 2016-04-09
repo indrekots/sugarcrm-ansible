@@ -1,0 +1,21 @@
+---
+php_version: 5.4.45-1~dotdeb+7.1
+php_dependencies:
+  - php5={{ php_version }}
+  - libapache2-mod-php5={{ php_version }}
+  - php5-fpm={{ php_version }}
+  - php5-curl={{ php_version }}
+  - php5-gd={{ php_version }}
+  - php-apc
+  - php-pear={{ php_version }}
+  - php5-common={{ php_version }}
+  - php5-apcu={{ php_version }}
+  - php5-cli={{ php_version }}
+  - php5-dev={{ php_version }}
+  - php5-mysqlnd={{ php_version }}
+  - php5-readline={{ php_version }}
+  - pkg-php-tools
+  - php5-imap={{ php_version }}
+
+php_jsmin_extension_location: /usr/lib/php5/20100525/jsmin.so
+

@@ -4,7 +4,7 @@
   file:
     dest: "{{ deploy_key_file | dirname }}"
     mode: 0700
-    owner: eproot
+    owner: root
     state: directory
 
 - name: Install deploy key
@@ -12,7 +12,7 @@
     content: "{{ deploy_key }}"
     dest: "{{ deploy_key_file }}"
     mode: 0600
-    owner: eproot
+    owner: root
 
 - name: Stop Apache before taking copy of working directory
   service: name=apache2 state=stopped
